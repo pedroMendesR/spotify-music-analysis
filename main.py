@@ -1,8 +1,8 @@
-from populate import DataGetter
+from dotenv import load_dotenv
 
-authorization = ""
-headers = {"Authorization":authorization}
+from database.populate import run
 
-data_getter = DataGetter(api_authorization=authorization)
-data_getter.set_initial_parameters(max_artists_inserted=10)
-data_getter.populate_database()
+load_dotenv()
+
+if __name__ == "__main__":
+    run()
