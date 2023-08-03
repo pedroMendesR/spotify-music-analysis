@@ -23,10 +23,3 @@ class AudioFeature(BaseModel):
     analysis_url: str
     duration_ms: int
     time_signature: int
-
-    # def __init__(self, **kwargs) -> None:
-    #     for key, value in kwargs.items():
-    #         setattr(self, key, value)
-
-    # def _to_cypher_structure():
-    #     pass
