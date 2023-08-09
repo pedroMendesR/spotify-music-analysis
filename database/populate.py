@@ -1,24 +1,24 @@
-from client.Config import ClientConfig
 from client.DataClient import DataClient
 from database.driver import DatabaseDriver
 from models.Artist import ArtistBasicInfo
 
-client_config = ClientConfig()
-client = DataClient(config=client_config)
-database_driver = DatabaseDriver("neo4j")
+def request_search():
+    pass
+
+def populate_database_v1(client):
+    '''
+    Função para popular banco de dados orientado a grafos onde:
+        - Nós são GENRE_ANO e MUSICA
+        - Arestas são top K MUSICAs que apareceram na busca textual do gênero X e ano Y
+    '''
+    years_to_search = client.config.years_to_search
+
+    for year in years_to_search:
+        genres_to_search = list(client.config.supergenre_dictionary.keys())
+        
+        for genre in genres_to_search:
+            pass
 
 
-def request_artist_basic_info(id_artist: str = None) -> ArtistBasicInfo:
-    search_id = client_config.initial_artist_id if not id_artist else id_artist
-    data = client.get(f"/artists/{search_id}")
-    data["followers"] = data["followers"]["total"]
-
-    del data["external_urls"]
-    del data["images"]
-
-    return ArtistBasicInfo(**data)
-
-
-def run():
-    initial_artist = request_artist_basic_info()
-    database_driver.exec(f"CREATE (a: Artist {initial_artist.to_cypher()})")
+def run(client:DataClient, database_driver:DatabaseDriver):
+    populate_database_v1(client)
