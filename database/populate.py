@@ -7,13 +7,17 @@ def request_search():
 
 
 def create_supergenres_nodes(client: DataClient, driver: DatabaseDriver):
-    
-    # supergêneros obtidos na criação das configurações do cliente
-    supergenres = client.config.supergenre_dictionary.values()
-    unique_supergenres = set(supergenres)
 
-    for genre in unique_supergenres:
-        driver.exec(f"CREATE (g: Genre {{ name: '{genre}' }})")
+    # supergêneros obtidos na criação das configurações do cliente
+    supergenres = client.config.supergenre_dictionary
+
+    # inverte o mapeamento para {supergênero: List[gênero]}, incluindo também subgeneros no banco
+    super_to_genres = {}
+    for genre, supergenre in supergenres.items():
+        super_to_genres[supergenre] = super_to_genres.get(supergenre, []) + [genre]
+
+    for supergenre,genres in super_to_genres.items():
+        driver.exec(f"CREATE (g: Genre {{ name: '{supergenre}', subgenres: {genres} }})")
 
 
 def populate_database_v1(client):
