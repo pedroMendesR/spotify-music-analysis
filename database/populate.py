@@ -1,5 +1,3 @@
-import pandas as pd
-
 from client.DataClient import DataClient
 from database.driver import DatabaseDriver
 
@@ -8,11 +6,13 @@ def request_search():
     pass
 
 
-def create_supergenres_nodes(driver: DatabaseDriver):
-    genres_df = pd.read_csv("extra/mapped_supergenres.csv")
-    supergenres = genres_df["supergenre"].unique()
+def create_supergenres_nodes(client: DataClient, driver: DatabaseDriver):
+    
+    # supergêneros obtidos na criação das configurações do cliente
+    supergenres = client.config.supergenre_dictionary.values()
+    unique_supergenres = set(supergenres)
 
-    for genre in supergenres:
+    for genre in unique_supergenres:
         driver.exec(f"CREATE (g: Genre {{ name: '{genre}' }})")
 
 
@@ -32,5 +32,5 @@ def populate_database_v1(client):
 
 
 def run(client: DataClient, database_driver: DatabaseDriver):
-    create_supergenres_nodes(database_driver)
+    create_supergenres_nodes(client, database_driver)
     # populate_database_v1(client)
