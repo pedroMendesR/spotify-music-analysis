@@ -24,8 +24,17 @@ class DataClient:
     def get(
         self, url: str, params: Dict[str, Union[str, int, float, List]] = None
     ) -> T:
-        response = get(f"{self.api_url}{url}", params, headers=self.api_request_headers)
-        return response.json(), response.status_code
+        try:
+            response = get(
+                f"{self.api_url}{url}", params, headers=self.api_request_headers
+            )
+            return response.json(), response.status_code
+        except:
+            print()
+            print(
+                f"\033[91m REQUISIÇÃO FALHOU!! Status: [{response.status_code}]: {response.reason} \033[0m"
+            )
+            exit(1)
 
     def update_auth_token(self, new_token: str):
         self.api_auth_token = new_token
