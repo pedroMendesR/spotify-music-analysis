@@ -8,6 +8,7 @@ class ClientConfig:
     years_to_search: List[str] = field(default_factory=list)
     tracks_to_search: List[str] = field(default_factory=list)
     number_tracks_per_genre: int = field(default_factory=int)
+    market_searched: str = field(default_factory=str)
 
     supergenre_dictionary: dict = field(init=False)
 
