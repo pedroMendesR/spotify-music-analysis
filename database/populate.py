@@ -17,14 +17,9 @@ def run(client:DataClient, database_driver:DatabaseDriver):
     def create_supergenres_nodes(client: DataClient, driver: DatabaseDriver):
 
         # supergêneros obtidos na criação das configurações do cliente
-        supergenres = client.config.supergenre_dictionary
+        supergenres = client.config.inv_supergenre_dictionary
 
-        # inverte o mapeamento para {supergênero: List[gênero]}, incluindo também subgeneros no banco
-        super_to_genres = {}
-        for genre, supergenre in supergenres.items():
-            super_to_genres[supergenre] = super_to_genres.get(supergenre, []) + [genre]
-
-        for supergenre,genres in super_to_genres.items():
+        for supergenre,genres in supergenres.items():
             driver.exec(f"CREATE (g: Genre {{ name: '{supergenre}', subgenres: {genres} }})")
 
 
@@ -113,10 +108,12 @@ def run(client:DataClient, database_driver:DatabaseDriver):
                 pass
         
      
-    #create_supergenres_nodes(client, database_driver)
+    create_supergenres_nodes(client, database_driver)
+    '''
     get_all_requests(request_search, \
                      content_buffer=client.config.tracks_to_search, \
                         max_content=10, node_type=Track)(genre="rock", limit=9, offset=0)
   
     for track in client.config.tracks_to_search:
         print(track.to_cypher())
+    '''
