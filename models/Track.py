@@ -3,9 +3,12 @@ from models.Artist import Artist
 
 from models.BaseModel import BaseModel
 
-@dataclass
+
 class Track(BaseModel):
-    artist: Artist
+    id: str
+    name: str
+    popularity: int
+    _raw_name: str = "tracks"
 
 @dataclass
 class AudioFeature(BaseModel):
@@ -25,4 +28,4 @@ class AudioFeature(BaseModel):
     analysis_url: str
     duration_ms: int
     time_signature: int
-    type_name: str = "audio_features"
+    raw_name: str = "audio_features"
