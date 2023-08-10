@@ -108,13 +108,24 @@ def run(client: DataClient, database_driver: DatabaseDriver):
 
         if not node_exists:
             cypher_query = f"CREATE (t:{node._node_name} {node.to_cypher()})"
-            database_driver.exec(cypher_query)
+            node = database_driver.exec(cypher_query)
+            print(f"\n\033[92m Created Node {node.__repr__()}")
+            return node[0]
+
+        return result[0]
+
+    def create_edge(from_id: str, to: str) -> None:
+        cypher_query = (
+            f"CREATE (n {{ id: '{from_id}' }})-[HAS_GENDER]->(g {{ name: '{to}' }})"
+        )
+        database_driver.exec(cypher_query)
 
     def persist_tracks(edge_to_genre: str = None):
         tracks_to_persist = client.config.tracks_to_search
 
         for track in tracks_to_persist:
-            create_node(track)
+            node = create_node(track)
+            create_edge(node.id, edge_to_genre)
         # ver se nó ja existe
         # criar nó
         # ver se aresta já existe
@@ -133,7 +144,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
         for _ in years_to_search:
             genres_to_search = list(client.config.supergenre_dictionary.keys())
 
-            for index, genre in enumerate(genres_to_search):
+            for _, genre in enumerate(genres_to_search):
                 supergenre = client.config.supergenre_dictionary[genre]
                 num_genres = client.config.inv_supergenre_dictionary[supergenre]
 
@@ -145,8 +156,8 @@ def run(client: DataClient, database_driver: DatabaseDriver):
                     node_type=Track,
                 )(genre=genre, limit=50, offset=0)
 
-                print(f"{genre} persist tracks")
-                persist_tracks()
+                print(f"\033[92m Persisting \033[94m{genre} Tracks \033[0m")
+                persist_tracks(genre)
 
                 client.config.tracks_to_search = []
 
