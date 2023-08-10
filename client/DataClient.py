@@ -30,6 +30,8 @@ class DataClient:
             )
             return response.json(), response.status_code
         except:
+            if response.status_code == 401:
+                return
             print()
             print(
                 f"\033[91m REQUISIÇÃO FALHOU!! Status: [{response.status_code}]: {response.reason} \033[0m"
