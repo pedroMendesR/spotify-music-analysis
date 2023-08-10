@@ -115,7 +115,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
         return result[0]["t"]
 
     def create_edge(from_id: str, to: str) -> None:
-        cypher_query = f"MATCH (n: Track {{ id: '{from_id}' }}) MATCH (g: Genre {{ name: '{to}' }}) CREATE (n)-[:HAS_GENDER]->(g)"
+        cypher_query = f"MATCH (n: Track {{ id: '{from_id}' }}) MATCH (g: Genre {{ name: '{to}' }}) CREATE (n)-[:HAS_GENRE]->(g)"
         database_driver.exec(cypher_query)
 
     def persist_tracks(edge_to_genre: str = None):
