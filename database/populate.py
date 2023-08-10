@@ -43,21 +43,20 @@ def run(client:DataClient, database_driver:DatabaseDriver):
                 pass
 
 
-    def get_all_requests(func_request, max_content:int, node_type:BaseModel):
+    def get_all_requests(func_request, content_buffer:list, max_content:int, node_type:BaseModel):
         
         def wrapper_get_all_requests(*args, **kwargs):
 
             total_items_available = 1
             total_items_getted = 0
             
-            try:
-                offset = kwargs["offset"]
-            except:
-                offset = 0
+            offset = kwargs.get("offset")
+            limit = kwargs.get("limit") if kwargs.get("limit") != 0 else 40
 
             while total_items_getted < total_items_available:
 
                 # obtém o objeto JSON do item principal do request
+                kwargs["limit"]=min(limit, total_items_available-total_items_getted)
                 kwargs["offset"]=offset+total_items_getted
 
                 data = func_request(*args, **kwargs)
@@ -69,7 +68,7 @@ def run(client:DataClient, database_driver:DatabaseDriver):
                 items = data["items"]
 
                 for item in items:
-                    client.config.tracks_to_search.append(node_type(item))                        
+                    content_buffer.append(node_type(item))                        
 
         return wrapper_get_all_requests
 
@@ -114,8 +113,10 @@ def run(client:DataClient, database_driver:DatabaseDriver):
                 pass
         
      
-    create_supergenres_nodes(client, database_driver)
-    get_all_requests(request_search, max_content=10, node_type=Track)(genre="rock", limit=2, offset=10)
+    #create_supergenres_nodes(client, database_driver)
+    get_all_requests(request_search, \
+                     content_buffer=client.config.tracks_to_search, \
+                        max_content=10, node_type=Track)(genre="rock", limit=9, offset=0)
   
     for track in client.config.tracks_to_search:
         print(track.to_cypher())
