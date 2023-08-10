@@ -10,13 +10,46 @@ def run(client:DataClient, database_driver:DatabaseDriver):
     
     TRACKS_PER_GENRE = client.config.number_tracks_per_genre
 
+    def request_search():
+        pass
+
+
+    def create_supergenres_nodes(client: DataClient, driver: DatabaseDriver):
+
+        # supergêneros obtidos na criação das configurações do cliente
+        supergenres = client.config.supergenre_dictionary
+
+        # inverte o mapeamento para {supergênero: List[gênero]}, incluindo também subgeneros no banco
+        super_to_genres = {}
+        for genre, supergenre in supergenres.items():
+            super_to_genres[supergenre] = super_to_genres.get(supergenre, []) + [genre]
+
+        for supergenre,genres in super_to_genres.items():
+            driver.exec(f"CREATE (g: Genre {{ name: '{supergenre}', subgenres: {genres} }})")
+
+
+    def populate_database_v1(client):
+        """
+        Função para popular banco de dados orientado a grafos onde:
+            - Nós são GENRE_ANO e MUSICA
+            - Arestas são top K MUSICAs que apareceram na busca textual do gênero X e ano Y
+        """
+        years_to_search = client.config.years_to_search
+
+        for year in years_to_search:
+            genres_to_search = list(client.config.supergenre_dictionary.keys())
+
+            for genre in genres_to_search:
+                pass
+
+
     def get_all_requests(func_request, max_content:int, node_type:BaseModel):
         
         def wrapper_get_all_requests(*args, **kwargs):
 
             total_items_available = 1
             total_items_getted = 0
-
+            
             try:
                 offset = kwargs["offset"]
             except:
@@ -80,7 +113,8 @@ def run(client:DataClient, database_driver:DatabaseDriver):
             for genre in genres_to_search:
                 pass
         
-    
+     
+    create_supergenres_nodes(client, database_driver)
     get_all_requests(request_search, max_content=10, node_type=Track)(genre="rock", limit=2, offset=10)
   
     for track in client.config.tracks_to_search:

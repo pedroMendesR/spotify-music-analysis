@@ -1,5 +1,7 @@
 from os import getenv
+
 from dotenv import load_dotenv
+
 from client.Config import ClientConfig
 from client.DataClient import DataClient
 from database.driver import DatabaseDriver
