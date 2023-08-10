@@ -101,18 +101,18 @@ def run(client: DataClient, database_driver: DatabaseDriver):
         return data, status
 
     def create_node(node: BaseModel):
-        cypher_query = f'MATCH (x:{node._node_name}{{id: "{node.id}"}}) RETURN x'
+        cypher_query = f'MATCH (t:{node._node_name}{{id: "{node.id}"}}) RETURN t'
         result = database_driver.exec(cypher_query)
 
         node_exists = result != []
 
         if not node_exists:
-            cypher_query = f"CREATE (t:{node._node_name} {node.to_cypher()})"
+            cypher_query = f"CREATE (t:{node._node_name} {node.to_cypher()}) RETURN t"
             node = database_driver.exec(cypher_query)
             print(f"\n\033[92m Created Node {node.__repr__()}")
-            return node[0]
+            return node[0]["t"]
 
-        return result[0]
+        return result[0]["t"]
 
     def create_edge(from_id: str, to: str) -> None:
         cypher_query = f"MATCH (n: Track {{ id: '{from_id}' }}) MATCH (g: Genre {{ name: '{to}' }}) CREATE (n)-[:HAS_GENDER]->(g)"
@@ -123,7 +123,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
 
         for track in tracks_to_persist:
             node = create_node(track)
-            create_edge(node.id, edge_to_genre)
+            create_edge(node["id"], edge_to_genre)
         # ver se nó ja existe
         # criar nó
         # ver se aresta já existe
@@ -159,6 +159,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
 
                 client.config.tracks_to_search = []
 
+    #create_supergenres_nodes()
     populate_database_v1()
     # create_supergenres_nodes(client, database_driver)
     """

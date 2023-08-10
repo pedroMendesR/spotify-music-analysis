@@ -11,6 +11,8 @@ class Track(BaseModel):
     _raw_name: str = "tracks"
     _node_name: str = "Track"
 
+    def __repr__(self):
+        return self.id+'  '+self.name+'  '+self.popularity
 @dataclass
 class AudioFeature(BaseModel):
     danceability: float
