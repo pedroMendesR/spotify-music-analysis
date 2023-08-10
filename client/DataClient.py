@@ -25,4 +25,8 @@ class DataClient:
         self, url: str, params: Dict[str, Union[str, int, float, List]] = None
     ) -> T:
         response = get(f"{self.api_url}{url}", params, headers=self.api_request_headers)
-        return response.json()
+        return response.json(), response.status_code
+
+    def update_auth_token(self, new_token: str):
+        self.api_auth_token = new_token
+        self.api_request_headers["Authorization"] = f"Bearer {new_token}"
