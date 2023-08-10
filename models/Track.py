@@ -9,6 +9,7 @@ class Track(BaseModel):
     name: str
     popularity: int
     _raw_name: str = "tracks"
+    _node_name: str = "Track"
 
 @dataclass
 class AudioFeature(BaseModel):

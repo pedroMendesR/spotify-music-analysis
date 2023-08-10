@@ -37,7 +37,7 @@ class DatabaseDriver:
         try:
             with self.driver.session() as session:
                 records = session.run(query)
-                return records
+                return records.data()
         except (DriverError, DatabaseError) as exception:
             print(f"Erro: {exception}")
         finally:

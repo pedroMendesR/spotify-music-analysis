@@ -4,6 +4,7 @@ import json
 class BaseModel:
 
     _raw_name: str = "base_model"
+    _node_name: str = "base_model"
 
     def __init__(self,json_item) -> None:
         object_attributes = [attribute for attribute in self.__annotations__.keys() if attribute[0] != "_"]
