@@ -154,12 +154,12 @@ def run(client: DataClient, database_driver: DatabaseDriver):
                     node_type=Track,
                 )(genre=genre, limit=50, offset=0)
 
-                print(f"\033[92m Persisting \033[94m{genre} Tracks \033[0m")
-                persist_tracks(genre)
+                print(f"\033[92m Persisting \033[94m{genre} \033[0mTracks")
+                persist_tracks(supergenre)
 
                 client.config.tracks_to_search = []
 
-    #create_supergenres_nodes()
+    create_supergenres_nodes()
     populate_database_v1()
     # create_supergenres_nodes(client, database_driver)
     """
