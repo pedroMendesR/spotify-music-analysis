@@ -7,6 +7,8 @@ Análise descritiva, sem treinamento, de dados obtidos pela API do spotify.
   
 * Popular o banco com nós de supergêneros e músicas, músicas que estão relacionadas a um artista de gênero x, que pertence a um supergêro X, estão ligadas ao nó deste supergênero.
   - Para encontrar estas músicas, a ideia é fazer um search por gênero e market BR, e popular o banco com as músicas dos top y artistas.
+
+* Verificar a duplicação de músicas com diferentes versões que possuem pouca diferença, utilizando Jellyfish e ScikitLearn (https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html) (https://memgraph.com/blog/cosine-similarity-python-scikit-learn)
   
   
 * Lista de Análises:
@@ -20,6 +22,7 @@ Análise descritiva, sem treinamento, de dados obtidos pela API do spotify.
    - [x] Popular o banco com todos os supergêneros definidos
    - [x] Adaptar o Script para transformar gêneros da música lida em supergêneros durante persistência
    - [x] Popular o banco com as relações entre supergêneros e músicas
+   - [ ] (Jellyfish? Scikit-Learn?) Verificar a existência de duplicidade e remover cópias
    - [ ] Plotar acompanhamento anual das músicas de N gêneros distintos
    - [ ] Plotar popularidade de gêneros em diferentes mercados
    - [ ] Realizar a média das métricas no TOP X dos mercados
