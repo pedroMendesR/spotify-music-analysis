@@ -18,8 +18,8 @@ Análise descritiva, sem treinamento, de dados obtidos pela API do spotify.
 ### TODO List:
    - [x] Definir e documentar os supergêneros
    - [x] Popular o banco com todos os supergêneros definidos
-   - [ ] Adaptar o Script para transformar gêneros da música lida em supergêneros durante persistência
-   - [ ] Popular o banco com as relações entre supergêneros e músicas
+   - [x] Adaptar o Script para transformar gêneros da música lida em supergêneros durante persistência
+   - [x] Popular o banco com as relações entre supergêneros e músicas
    - [ ] Plotar acompanhamento anual das músicas de N gêneros distintos
    - [ ] Plotar popularidade de gêneros em diferentes mercados
    - [ ] Realizar a média das métricas no TOP X dos mercados
