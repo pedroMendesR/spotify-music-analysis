@@ -29,3 +29,6 @@ class BaseModel:
             )
 
         return "{" + cypher_string + "}"
+
+    def to_dict(self):
+        return {attr: getattr(self, attr) for attr in self.__dict__}

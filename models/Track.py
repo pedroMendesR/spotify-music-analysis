@@ -1,6 +1,3 @@
-from dataclasses import dataclass
-from models.Artist import Artist
-
 from models.BaseModel import BaseModel
 
 
@@ -12,23 +9,21 @@ class Track(BaseModel):
     _node_name: str = "Track"
 
     def __repr__(self):
-        return self.id+'  '+self.name+'  '+self.popularity
-@dataclass
+        return self.id + "  " + self.name + "  " + self.popularity
+
+
 class AudioFeature(BaseModel):
+    acousticness: float
     danceability: float
+    duration_ms: int
     energy: float
+    instrumentalness: float
     key: int
+    liveness: float
     loudness: float
     mode: int
     speechiness: float
-    acousticness: float
-    instrumentalness: float
-    liveness: float
-    valence: float
     tempo: float
-    uri: str
-    track_href: str
-    analysis_url: str
-    duration_ms: int
     time_signature: int
+    valence: float
     raw_name: str = "audio_features"

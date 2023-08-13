@@ -2,10 +2,8 @@ from typing import List
 
 from client.DataClient import DataClient
 from database.driver import DatabaseDriver
-from models.Artist import ArtistBasicInfo
 from models.BaseModel import BaseModel
-from models.Genre import Genre
-from models.Track import Track
+from models.Track import AudioFeature, Track
 
 
 def run(client: DataClient, database_driver: DatabaseDriver):
@@ -118,18 +116,47 @@ def run(client: DataClient, database_driver: DatabaseDriver):
         cypher_query = f"MATCH (n: Track {{ id: '{from_id}' }}) MATCH (g: Genre {{ name: '{to}' }}) CREATE (n)-[:HAS_GENRE]->(g)"
         database_driver.exec(cypher_query)
 
+    def update_track_info(track_id: str, features: dict) -> None:
+        set_attr_string = "SET "
+        for index, (key, value) in enumerate(features.items()):
+            set_attr_string += (
+                f"t.{key} = {value}{', ' if index < len(features) - 1 else ';'}"
+            )
+
+        cypher_query = f"MATCH (t: Track {{ id: '{track_id}' }}) {set_attr_string}"
+        database_driver.exec(cypher_query)
+
+    def map_and_remove_unused_audio_feature(features: List[AudioFeature]) -> dict:
+        mapped_features = {}
+        for feature in features:
+            feature.pop("track_href", None)
+            feature.pop("analysis_url", None)
+            feature.pop("track_href", None)
+            feature.pop("type", None)
+            feature.pop("uri", None)
+            track_id = feature["id"]
+            feature.pop("id", None)
+            mapped_features[track_id] = feature
+        return mapped_features
+
+    def bulk_persist_track_audio_features(tracks_ids: List[str]) -> None:
+        tracks_ids_string = ",".join(tracks_ids)
+
+        data, _ = client.get("/audio-features", {"ids": tracks_ids_string})
+        mapped_features = map_and_remove_unused_audio_feature(data["audio_features"])
+        for track_id, feature in mapped_features.items():
+            update_track_info(track_id, feature)
+
     def persist_tracks(edge_to_genre: str = None):
         tracks_to_persist = client.config.tracks_to_search
+        tracks_ids = []
 
         for track in tracks_to_persist:
             node = create_node(track)
             create_edge(node["id"], edge_to_genre)
-        # ver se nó ja existe
-        # criar nó
-        # ver se aresta já existe
-        # criar aresta
+            tracks_ids.append(node["id"])
 
-        pass
+        bulk_persist_track_audio_features(tracks_ids)
 
     def populate_database_v1():
         """
@@ -161,11 +188,3 @@ def run(client: DataClient, database_driver: DatabaseDriver):
 
     create_supergenres_nodes()
     populate_database_v1()
-    # create_supergenres_nodes(client, database_driver)
-    """
-    get_all_requests(request_search, \
-                     content_buffer=client.config.tracks_to_search, \
-                        max_content=10, node_type=Track)(genre="rock", limit=9, offset=0)
-  
-    #for track in client.config.tracks_to_search:
-    #    print(track.to_cypher())"""
