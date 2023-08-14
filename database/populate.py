@@ -113,8 +113,14 @@ def run(client: DataClient, database_driver: DatabaseDriver):
         return result[0]["t"]
 
     def create_edge(from_id: str, to: str) -> None:
-        cypher_query = f"MATCH (n: Track {{ id: '{from_id}' }}) MATCH (g: Genre {{ name: '{to}' }}) CREATE (n)-[:HAS_GENRE]->(g)"
-        database_driver.exec(cypher_query)
+        check_if_edge_exists_query = f"MATCH (t: Track {{ id: '{from_id}' }})-[:HAS_GENRE]->(g: Genre {{ name: '{to}' }}) \
+                                       RETURN COUNT(*) AS count"
+        result = database_driver.exec(check_if_edge_exists_query)
+        edge_exists = result[0]["count"] > 0
+
+        if not edge_exists:
+            cypher_query = f"MATCH (n: Track {{ id: '{from_id}' }}) MATCH (g: Genre {{ name: '{to}' }}) CREATE (n)-[:HAS_GENRE]->(g)"
+            database_driver.exec(cypher_query)
 
     def update_track_info(track_id: str, features: dict) -> None:
         set_attr_string = "SET "

@@ -25,7 +25,7 @@ client_config = ClientConfig(
 client = DataClient(config=client_config)
 database_driver = DatabaseDriver("neo4j")
 data_manager = DataManager(
-    database_driver, 5.00, client_config.inv_supergenre_dictionary.keys()
+    database_driver, 5.00, list(client_config.inv_supergenre_dictionary.keys())
 )
 
 if __name__ == "__main__":
