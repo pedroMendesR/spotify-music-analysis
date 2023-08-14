@@ -6,6 +6,7 @@ from client.Config import ClientConfig
 from client.DataClient import DataClient
 from database.driver import DatabaseDriver
 from database.populate import run
+from lib.DataManager import DataManager
 
 load_dotenv()
 
@@ -23,6 +24,10 @@ client_config = ClientConfig(
 
 client = DataClient(config=client_config)
 database_driver = DatabaseDriver("neo4j")
+data_manager = DataManager(
+    database_driver, 5.00, client_config.inv_supergenre_dictionary.keys()
+)
 
 if __name__ == "__main__":
     run(client=client, database_driver=database_driver)
+    data_manager.check_dupe_tracks()
