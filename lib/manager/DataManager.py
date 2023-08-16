@@ -70,6 +70,10 @@ class DataManager:
         query = f"MATCH(t: Track {{ id: '{node['id']}' }}) DETACH DELETE t"
         self.driver.exec(query)
 
+    def remove_no_features_musics(self):
+        query = f"MATCH(t: Track ) WHERE t.valence IS NULL DETACH DELETE t"
+        self.driver.exec(query)
+
     def compare_tracks_stats(self, source, target):
         analysis_values = [
             "loudness",

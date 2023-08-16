@@ -30,4 +30,5 @@ data_manager = DataManager(
 
 if __name__ == "__main__":
     run(client=client, database_driver=database_driver)
+    # data_manager.remove_no_features_musics()
     # data_manager.check_dupe_tracks()
