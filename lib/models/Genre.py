@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from itertools import count
 
-from models.BaseModel import BaseModel
+from .BaseModel import BaseModel
 
 
 @dataclass

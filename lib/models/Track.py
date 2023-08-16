@@ -1,4 +1,4 @@
-from models.BaseModel import BaseModel
+from .BaseModel import BaseModel
 
 
 class Track(BaseModel):

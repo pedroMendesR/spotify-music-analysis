@@ -1,6 +1,3 @@
-import json
-
-
 class BaseModel:
     _raw_name: str = "base_model"
     _node_name: str = "base_model"
@@ -21,7 +18,7 @@ class BaseModel:
 
         for index, (key, value) in model_items:
             if type(value) == str:
-                value = '"{}"'.format(value.replace("\"","\'"))
+                value = '"{}"'.format(value.replace('"', "'"))
 
             formatted_key = key.replace("'", "")
             cypher_string += (

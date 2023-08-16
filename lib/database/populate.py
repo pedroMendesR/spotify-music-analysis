@@ -1,10 +1,10 @@
 from time import sleep
 from typing import List
 
-from client.DataClient import DataClient
-from database.driver import DatabaseDriver
-from models.BaseModel import BaseModel
-from models.Track import AudioFeature, Track
+from ..client.DataClient import DataClient
+from ..models.BaseModel import BaseModel
+from ..models.Track import AudioFeature, Track
+from .driver import DatabaseDriver
 
 
 def run(client: DataClient, database_driver: DatabaseDriver):
@@ -159,7 +159,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
         else:
             print("\033[93mIniciando pausa antes de buscar novo gênero...\n")
 
-        sleep(180) if handling_year else sleep(45)
+        sleep(1) if handling_year else sleep(30)
 
         print("\n\nRETOMANDO AÇÕES!!!\033[0m\n")
 

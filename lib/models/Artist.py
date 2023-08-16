@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from models.BaseModel import BaseModel
+from .BaseModel import BaseModel
 
 
 @dataclass

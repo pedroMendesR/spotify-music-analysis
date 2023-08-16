@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 
-from database.driver import DatabaseDriver
+from ..database.driver import DatabaseDriver
 
 
 class DataManager:

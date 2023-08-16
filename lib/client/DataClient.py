@@ -1,12 +1,11 @@
+from datetime import datetime
 from os import getenv
 from typing import Dict, List, TypeVar, Union
 
 from dotenv import load_dotenv
 from requests import get
 
-from client.Config import ClientConfig
-
-from datetime import datetime
+from .Config import ClientConfig
 
 load_dotenv()
 
@@ -40,10 +39,14 @@ class DataClient:
                     return response.json(), response.status_code
                 elif response.status_code == 401:
                     self.update_auth_token(
-                        input("(if) O token de autenticação expirou, favor inserir outro:\n")
+                        input(
+                            "(if) O token de autenticação expirou, favor inserir outro:\n"
+                        )
                     )
                 elif response.status_code == 429:
-                    print(f"\033[91m {datetime.now()} (if) TOO MANY REQUESTS!! Status: [{response.status_code}]: {response.reason} \033[0m")
+                    print(
+                        f"\033[91m {datetime.now()} (if) TOO MANY REQUESTS!! Status: [{response.status_code}]: {response.reason} \033[0m"
+                    )
                     input("Continuar...")
             except:
                 print()
