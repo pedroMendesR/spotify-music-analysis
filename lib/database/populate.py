@@ -1,3 +1,4 @@
+from time import sleep, time
 from typing import List
 
 from client.DataClient import DataClient
@@ -9,17 +10,20 @@ from models.Track import AudioFeature, Track
 def run(client: DataClient, database_driver: DatabaseDriver):
     TRACKS_PER_GENRE = int(client.config.number_tracks_per_genre)
 
-    def request_search():
-        pass
+    def supergenre_exists(supergenre_name: str) -> bool:
+        query = f"MATCH(g: Genre {{ name: '{supergenre_name}' }}) RETURN g"
+        result = database_driver.exec(query)
+
+        return True if result != [] else False
 
     def create_supergenres_nodes():
-        # supergêneros obtidos na criação das configurações do cliente
         supergenres = client.config.inv_supergenre_dictionary
 
         for supergenre, genres in supergenres.items():
-            database_driver.exec(
-                f"CREATE (g: Genre {{ name: '{supergenre}', subgenres: {genres} }})"
-            )
+            if not supergenre_exists(supergenre):
+                database_driver.exec(
+                    f"CREATE (g: Genre {{ name: '{supergenre}', subgenres: {genres} }})"
+                )
 
     def get_all_requests(
         func_request, content_buffer: list, max_content: int, node_type: BaseModel
@@ -37,7 +41,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
                 kwargs["offset"] = offset + total_items_getted
 
                 data, status = func_request(*args, **kwargs)
-                
+
                 data = data[node_type._raw_name]
 
                 total_items_available = min(data["total"], max_content)
@@ -66,7 +70,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
         request_string = f"/search?q={string_search}&type={content_type}&market={market}&limit={limit}&offset={offset}"
 
         data, status = client.get(request_string)
-        
+
         if status != 200:
             raise Exception(f"\033[91m REQUISIÇÃO FALHOU[{status}]: {data} \033[0m")
 
@@ -108,7 +112,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
 
     def map_and_remove_unused_audio_feature(features: List[AudioFeature]) -> dict:
         mapped_features = {}
-        for index, feature in enumerate(features):
+        for _, feature in enumerate(features):
             if feature is not None:
                 feature.pop("track_href", None)
                 feature.pop("analysis_url", None)
@@ -120,14 +124,21 @@ def run(client: DataClient, database_driver: DatabaseDriver):
                 mapped_features[track_id] = feature
         return mapped_features
 
-    def bulk_persist_track_audio_features(tracks_ids: List[str], tracks_per_request:int=100) -> None:
+    def bulk_persist_track_audio_features(
+        tracks_ids: List[str], tracks_per_request: int = 100
+    ) -> None:
         while tracks_ids != []:
-            tracks,tracks_ids = tracks_ids[:tracks_per_request], tracks_ids[tracks_per_request:]
+            tracks, tracks_ids = (
+                tracks_ids[:tracks_per_request],
+                tracks_ids[tracks_per_request:],
+            )
             tracks_ids_string = ",".join(tracks)
 
             data, _ = client.get("/audio-features", {"ids": tracks_ids_string})
 
-            mapped_features = map_and_remove_unused_audio_feature(data["audio_features"])
+            mapped_features = map_and_remove_unused_audio_feature(
+                data["audio_features"]
+            )
             for track_id, feature in mapped_features.items():
                 update_track_info(track_id, feature)
 
@@ -142,6 +153,16 @@ def run(client: DataClient, database_driver: DatabaseDriver):
 
         bulk_persist_track_audio_features(tracks_ids)
 
+    def handle_api_rate_limit(handling_year: bool = False):
+        if handling_year:
+            print("\n\033[93mIniciando pausa antes de popular novo ano...\n")
+        else:
+            print("\033[93mIniciando pausa antes de buscar novo gênero...\n")
+
+        sleep(180) if handling_year else sleep(45)
+
+        print("\n\nRETOMANDO AÇÕES!!!\033[0m\n")
+
     def populate_database_v1():
         """
         Função para popular banco de dados orientado a grafos onde:
@@ -152,8 +173,10 @@ def run(client: DataClient, database_driver: DatabaseDriver):
 
         for _ in years_to_search:
             genres_to_search = list(client.config.supergenre_dictionary.keys())
+            handle_api_rate_limit(handling_year=True)
 
             for _, genre in enumerate(genres_to_search):
+                handle_api_rate_limit(handling_year=False)
                 supergenre = client.config.supergenre_dictionary[genre]
                 num_genres = client.config.inv_supergenre_dictionary[supergenre]
 
@@ -170,5 +193,5 @@ def run(client: DataClient, database_driver: DatabaseDriver):
 
                 client.config.tracks_to_search = []
 
-    #create_supergenres_nodes()
+    create_supergenres_nodes()
     populate_database_v1()

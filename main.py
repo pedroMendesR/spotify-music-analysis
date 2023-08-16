@@ -2,11 +2,11 @@ from os import getenv
 
 from dotenv import load_dotenv
 
-from client.Config import ClientConfig
-from client.DataClient import DataClient
-from database.driver import DatabaseDriver
-from database.populate import run
-from lib.DataManager import DataManager
+from lib.client.Config import ClientConfig
+from lib.client.DataClient import DataClient
+from lib.database.driver import DatabaseDriver
+from lib.database.populate import run
+from lib.manager.DataManager import DataManager
 
 load_dotenv()
 
@@ -30,4 +30,4 @@ data_manager = DataManager(
 
 if __name__ == "__main__":
     run(client=client, database_driver=database_driver)
-    #data_manager.check_dupe_tracks()
+    # data_manager.check_dupe_tracks()
