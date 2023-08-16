@@ -35,7 +35,10 @@ class DataManager:
         return False
 
     def check_dupe_tracks(self):
+        print()
+        dupe_tracks_deleted = 0
         for genre in self.managed_genres:
+            dupe_tracks_deleted_genre = 0
             all_tracks_nodes = self.driver.exec(
                 f"MATCH(t: Track)-[:HAS_GENRE]->(g {{ name: '{genre}' }}) RETURN t"
             )
@@ -58,6 +61,10 @@ class DataManager:
                             else similar_node
                         )
                         self.remove_duplicate(deleted_node["t"])
+                        dupe_tracks_deleted_genre += 1
+            print(f"Tracks deletadas em {genre} : {dupe_tracks_deleted_genre}")
+            dupe_tracks_deleted += dupe_tracks_deleted_genre
+        print(f"\n\nForam excluídas {dupe_tracks_deleted} tracks devido à duplicação.")
 
     def remove_duplicate(self, node):
         query = f"MATCH(t: Track {{ id: '{node['id']}' }}) DETACH DELETE t"

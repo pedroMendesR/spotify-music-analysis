@@ -6,6 +6,8 @@ from requests import get
 
 from client.Config import ClientConfig
 
+from datetime import datetime
+
 load_dotenv()
 
 T = TypeVar("T")
@@ -21,23 +23,32 @@ class DataClient:
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def get(
-        self, url: str, params: Dict[str, Union[str, int, float, List]] = None
-    ) -> T:
-        try:
-            response = get(
-                f"{self.api_url}{url}", params, headers=self.api_request_headers
-            )
-            return response.json(), response.status_code
-        except:
-            if response.status_code == 401:
-                return
-            print()
-            print(
-                f"\033[91m REQUISIÇÃO FALHOU!! Status: [{response.status_code}]: {response.reason} \033[0m"
-            )
-            exit(1)
-
     def update_auth_token(self, new_token: str):
         self.api_auth_token = new_token
         self.api_request_headers["Authorization"] = f"Bearer {new_token}"
+
+    def get(
+        self, url: str, params: Dict[str, Union[str, int, float, List]] = None
+    ) -> T:
+        while True:
+            response = None
+            try:
+                response = get(
+                    f"{self.api_url}{url}", params, headers=self.api_request_headers
+                )
+                if response.status_code == 200:
+                    return response.json(), response.status_code
+                elif response.status_code == 401:
+                    self.update_auth_token(
+                        input("(if) O token de autenticação expirou, favor inserir outro:\n")
+                    )
+                elif response.status_code == 429:
+                    print(f"\033[91m {datetime.now()} (if) TOO MANY REQUESTS!! Status: [{response.status_code}]: {response.reason} \033[0m")
+                    input("Continuar...")
+            except:
+                print()
+                print(
+                    f"\033[91m REQUISIÇÃO FALHOU!! Status: [{response.status_code}]: {response.reason} \033[0m"
+                )
+                exit(1)
+            input(f"{datetime.now()} {response}")

@@ -21,20 +21,6 @@ def run(client: DataClient, database_driver: DatabaseDriver):
                 f"CREATE (g: Genre {{ name: '{supergenre}', subgenres: {genres} }})"
             )
 
-    def populate_database_v1():
-        """
-        Função para popular banco de dados orientado a grafos onde:
-            - Nós são GENRE_ANO e MUSICA
-            - Arestas são top K MUSICAs que apareceram na busca textual do gênero X e ano Y
-        """
-        years_to_search = client.config.years_to_search
-
-        for year in years_to_search:
-            genres_to_search = list(client.config.supergenre_dictionary.keys())
-
-            for genre in genres_to_search:
-                pass
-
     def get_all_requests(
         func_request, content_buffer: list, max_content: int, node_type: BaseModel
     ):
@@ -50,7 +36,8 @@ def run(client: DataClient, database_driver: DatabaseDriver):
                 kwargs["limit"] = min(limit, total_items_available - total_items_getted)
                 kwargs["offset"] = offset + total_items_getted
 
-                data = func_request(*args, **kwargs)
+                data, status = func_request(*args, **kwargs)
+                
                 data = data[node_type._raw_name]
 
                 total_items_available = min(data["total"], max_content)
@@ -65,19 +52,6 @@ def run(client: DataClient, database_driver: DatabaseDriver):
 
         return wrapper_get_all_requests
 
-    def authentication_expirated(func_request):
-        def wrapper_authentication_expirated(*args, **kwargs):
-            data, status = func_request(*args, **kwargs)
-            while status == 401:
-                client.update_auth_token(
-                    input("O token de autenticação expirou, favor inserir outro:\n")
-                )
-                data, status = func_request(*args, **kwargs)
-            return data
-
-        return wrapper_authentication_expirated
-
-    @authentication_expirated
     def request_search(
         genre: str,
         year: str = None,
@@ -92,7 +66,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
         request_string = f"/search?q={string_search}&type={content_type}&market={market}&limit={limit}&offset={offset}"
 
         data, status = client.get(request_string)
-
+        
         if status != 200:
             raise Exception(f"\033[91m REQUISIÇÃO FALHOU[{status}]: {data} \033[0m")
 
@@ -134,24 +108,28 @@ def run(client: DataClient, database_driver: DatabaseDriver):
 
     def map_and_remove_unused_audio_feature(features: List[AudioFeature]) -> dict:
         mapped_features = {}
-        for feature in features:
-            feature.pop("track_href", None)
-            feature.pop("analysis_url", None)
-            feature.pop("track_href", None)
-            feature.pop("type", None)
-            feature.pop("uri", None)
-            track_id = feature["id"]
-            feature.pop("id", None)
-            mapped_features[track_id] = feature
+        for index, feature in enumerate(features):
+            if feature is not None:
+                feature.pop("track_href", None)
+                feature.pop("analysis_url", None)
+                feature.pop("track_href", None)
+                feature.pop("type", None)
+                feature.pop("uri", None)
+                track_id = feature["id"]
+                feature.pop("id", None)
+                mapped_features[track_id] = feature
         return mapped_features
 
-    def bulk_persist_track_audio_features(tracks_ids: List[str]) -> None:
-        tracks_ids_string = ",".join(tracks_ids)
+    def bulk_persist_track_audio_features(tracks_ids: List[str], tracks_per_request:int=100) -> None:
+        while tracks_ids != []:
+            tracks,tracks_ids = tracks_ids[:tracks_per_request], tracks_ids[tracks_per_request:]
+            tracks_ids_string = ",".join(tracks)
 
-        data, _ = client.get("/audio-features", {"ids": tracks_ids_string})
-        mapped_features = map_and_remove_unused_audio_feature(data["audio_features"])
-        for track_id, feature in mapped_features.items():
-            update_track_info(track_id, feature)
+            data, _ = client.get("/audio-features", {"ids": tracks_ids_string})
+
+            mapped_features = map_and_remove_unused_audio_feature(data["audio_features"])
+            for track_id, feature in mapped_features.items():
+                update_track_info(track_id, feature)
 
     def persist_tracks(edge_to_genre: str = None):
         tracks_to_persist = client.config.tracks_to_search
@@ -192,5 +170,5 @@ def run(client: DataClient, database_driver: DatabaseDriver):
 
                 client.config.tracks_to_search = []
 
-    create_supergenres_nodes()
+    #create_supergenres_nodes()
     populate_database_v1()
