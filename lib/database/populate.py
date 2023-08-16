@@ -1,4 +1,4 @@
-from time import sleep, time
+from time import sleep
 from typing import List
 
 from client.DataClient import DataClient
