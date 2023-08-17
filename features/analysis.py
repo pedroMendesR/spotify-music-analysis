@@ -119,3 +119,75 @@ class Analysis:
             f"\n\033[94mExportando {self.market_searched} - {self.year_searched} -> {file_name}.png\033[0m\n"
         )
         fig.write_image(f"{save_path}/{file_name}.png")
+
+    def generate_supergenres_stats_box_plot(
+        self, plots_per_image=10, generate_plots=True
+    ):
+        save_path = f"features/{self.market_searched}/{self.year_searched}/boxplot"
+        if not os.path.exists(save_path):
+            os.mkdir(save_path)
+
+        supergenres = self.client.config.inv_supergenre_dictionary.keys()
+
+        df_total = pd.DataFrame({"genre": [], "popularity": []})
+        df = pd.DataFrame({"genre": [], "popularity": []})
+        df_var = pd.DataFrame({"genre": [], "popularity": []})
+
+        last_index = plots_per_image
+        image_index = 0
+
+        for index, genre in enumerate(supergenres):
+            query = f"MATCH(g: Genre {{ name: '{genre}' }})-[:HAS_GENRE]-(t) RETURN t"
+            result = self.driver.exec(query)
+
+            popularities = [item["t"]["popularity"] for item in result]
+
+            df_dict = {"genre": genre, "popularity": popularities}
+            df_genre = pd.DataFrame(df_dict)
+
+            df = pd.concat([df, df_genre], ignore_index=True)
+            df_total = pd.concat([df_total, df_genre], ignore_index=True)
+
+            genre_var = {
+                "genre": genre,
+                "popularity": [df_genre.var(numeric_only=True)["popularity"]],
+            }
+
+            df_var = pd.concat([df_var, pd.DataFrame(genre_var)], ignore_index=True)
+
+            if (
+                (index % last_index == 0 and index != 0)
+                or index == len(supergenres) - 1
+            ) and generate_plots:
+                image_index += 1
+
+                fig = px.box(df, x="genre", y="popularity", points="all")
+                fig.update_layout(
+                    title=f"Boxplot - {self.market_searched}/{self.year_searched}"
+                )
+                fig.write_image(f"{save_path}/boxplot_{image_index}.png")
+
+                df = pd.DataFrame({"genre": [], "popularity": []})
+
+        df_var = df_var.dropna()
+        df_var = df_var.sort_values(by="popularity")
+
+        max_var_genres = df_var.tail(10)["genre"].to_list()
+        max_df = df_total[df_total["genre"].isin(max_var_genres)]
+
+        fig = px.box(max_df, x="genre", y="popularity", points="all")
+        fig.update_layout(
+            title=f"Boxplot Variâncias Máximas - {self.market_searched}/{self.year_searched}"
+        )
+        fig.write_image(f"{save_path}/boxplot_max_var.png")
+
+        min_var_genres = df_var.head(10)["genre"].to_list()
+        min_df = df_total[df_total["genre"].isin(min_var_genres)]
+
+        fig = px.box(min_df, x="genre", y="popularity", points="all")
+        fig.update_layout(
+            title=f"Boxplot Variâncias Mínimas - {self.market_searched}/{self.year_searched}"
+        )
+        fig.write_image(f"{save_path}/boxplot_min_var.png")
+
+        # print(max_var_genres)
