@@ -64,7 +64,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
         limit: int = 40,
         offset: int = 0,
     ):
-        string_search = f"genre: {genre}{' year: '+ year if year is not None else ''}"
+        string_search = f"genre:{genre}{' year:'+str(year) if year is not None else ''}"
         content_type = type_content_searched
 
         request_string = f"/search?q={string_search}&type={content_type}&market={market}&limit={limit}&offset={offset}"
@@ -171,7 +171,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
         """
         years_to_search = client.config.years_to_search
 
-        for _ in years_to_search:
+        for year in years_to_search:
             genres_to_search = list(client.config.supergenre_dictionary.keys())
             handle_api_rate_limit(handling_year=True)
 
@@ -186,7 +186,7 @@ def run(client: DataClient, database_driver: DatabaseDriver):
                     content_buffer=client.config.tracks_to_search,
                     max_content=max_content,
                     node_type=Track,
-                )(genre=genre, limit=50, offset=0)
+                )(genre=genre, year=year, limit=50, offset=0)
 
                 print(f"\033[92m Persisting \033[94m{genre} \033[0mTracks")
                 persist_tracks(supergenre)

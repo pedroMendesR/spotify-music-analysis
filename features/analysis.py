@@ -59,6 +59,9 @@ class Analysis:
             print(
                 f"\n\033[94mExportando {self.market_searched} - {self.year_searched} -> {genre}.png\033[0m\n"
             )
+            fig.update_layout(
+                title=f"Radar ({genre}) - {self.market_searched}/{self.year_searched}"
+            )
             fig.write_image(f"{save_path}/{genre}.png")
 
     def generate_popularity_mean_bar_chart(self, save_most_popular: bool = True):

@@ -37,3 +37,5 @@ if __name__ == "__main__":
     # analysis.generate_supergenres_stats_radar_map()
     analysis.generate_popularity_mean_bar_chart(save_most_popular=True)
     analysis.generate_popularity_mean_bar_chart(save_most_popular=False)
+    # analysis.generate_supergenres_stats_radar_map()
+    analysis.generate_supergenres_stats_box_plot()
