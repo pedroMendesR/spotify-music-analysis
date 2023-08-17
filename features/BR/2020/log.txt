@@ -1,0 +1,5 @@
+5949 tracks coletadas.
+
+
+
+Foram removidas 3 tracks sem métricas

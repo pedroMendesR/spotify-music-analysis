@@ -1,0 +1,69 @@
+6739 Tracks coletadas.
+
+
+Tracks deletadas em electronic : 6
+Tracks deletadas em disco : 58
+Tracks deletadas em disney : 12
+Tracks deletadas em drum-and-bass : 6
+Tracks deletadas em emo : 54
+Tracks deletadas em folk : 26
+Tracks deletadas em brazilian : 8
+Tracks deletadas em french : 21
+Tracks deletadas em funk : 20
+Tracks deletadas em garage : 3
+Tracks deletadas em german : 27
+Tracks deletadas em gospel : 17
+Tracks deletadas em goth : 8
+Tracks deletadas em grindcore : 18
+Tracks deletadas em groove : 17
+Tracks deletadas em grunge : 39
+Tracks deletadas em rock : 4
+Tracks deletadas em pop : 16
+Tracks deletadas em metal : 11
+Tracks deletadas em hip-hop : 14
+Tracks deletadas em holidays : 82
+Tracks deletadas em country : 64
+Tracks deletadas em house : 68
+Tracks deletadas em eletronic : 13
+Tracks deletadas em indian : 12
+Tracks deletadas em indie : 7
+Tracks deletadas em industrial : 21
+Tracks deletadas em iranian : 11
+Tracks deletadas em japanese : 14
+Tracks deletadas em jazz : 8
+Tracks deletadas em k-pop : 14
+Tracks deletadas em children : 62
+Tracks deletadas em latin : 18
+Tracks deletadas em malay : 6
+Tracks deletadas em asian-pop : 10
+Tracks deletadas em movies : 35
+Tracks deletadas em acoustic : 7
+Tracks deletadas em classical : 16
+Tracks deletadas em club : 108
+Tracks deletadas em piano : 39
+Tracks deletadas em punk : 6
+Tracks deletadas em blues : 7
+Tracks deletadas em chill : 86
+Tracks deletadas em reggae : 64
+Tracks deletadas em reggaeton : 34
+Tracks deletadas em road-trip : 68
+Tracks deletadas em romance : 27
+Tracks deletadas em sad : 30
+Tracks deletadas em show-tunes : 10
+Tracks deletadas em ska : 27
+Tracks deletadas em sleep : 5
+Tracks deletadas em soul : 30
+Tracks deletadas em soundtracks : 12
+Tracks deletadas em spanish : 40
+Tracks deletadas em study : 1
+Tracks deletadas em summer : 0
+Tracks deletadas em swedish : 48
+Tracks deletadas em trance : 86
+Tracks deletadas em turkish : 14
+Tracks deletadas em work-out : 64
+Tracks deletadas em world-music : 10
+
+
+Foram excluídas 1669 tracks devido à duplicação.
+Foram excluídas 5 tracks que não possuem métricas.
+Restaram ao todo 5646 tracks.
