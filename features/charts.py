@@ -1,4 +1,4 @@
-class RadarMap:
+class RadarChart:
     theta: list[str] = [
         "liveness",
         "valence",
