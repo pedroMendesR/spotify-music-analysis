@@ -47,7 +47,11 @@ class DataClient:
                     print(
                         f"\033[91m {datetime.now()} (if) TOO MANY REQUESTS!! Status: [{response.status_code}]: {response.reason} \033[0m"
                     )
-                    input("Continuar...")
+                    self.update_auth_token(
+                        input(
+                            "(if) O token de autenticação nao vai rolar mais, favor inserir outro:\n"
+                        )
+                    )
             except:
                 print()
                 print(
