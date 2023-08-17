@@ -33,6 +33,11 @@ class Analysis:
             radar_graph = RadarMap()
             query = f"MATCH(g: Genre {{ name: '{genre}' }})-[:HAS_GENRE]-(t) RETURN t"
             result = self.driver.exec(query)
+            if result == []:
+                print(
+                    f"\n\032[94mSem dados {self.market_searched} - {self.year_searched} -> {genre}.png\033[0m\n"
+                )
+                continue
             radar_graph._save_metrics_to_dict(result)
             radar_graph._create_metrics_mean_values(len(result))
             df = pd.DataFrame(dict(r=radar_graph.mean_values, theta=radar_graph.theta))
