@@ -23,7 +23,7 @@ Análise descritiva, sem treinamento, de dados obtidos pela API do spotify.
    - [x] Adaptar o Script para transformar gêneros da música lida em supergêneros durante persistência
    - [x] Popular o banco com as relações entre supergêneros e músicas
    - [x] (Jellyfish? Scikit-Learn?) Verificar a existência de duplicidade e remover cópias
-   - [ ] Plotar acompanhamento anual das músicas de N gêneros distintos
-   - [ ] Plotar popularidade de gêneros em diferentes mercados
-   - [ ] Realizar a média das métricas no TOP X dos mercados
+   - [x] Plotar acompanhamento anual das músicas de N gêneros distintos
+   - [x] Plotar popularidade de gêneros em diferentes mercados
+   - [x] Realizar a média das métricas no TOP X dos mercados
    - [ ] (Se possível) Realizar geração de regras de subgrupos baseados nas métricas das músicas
