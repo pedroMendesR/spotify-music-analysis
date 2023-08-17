@@ -1,0 +1,76 @@
+5228 tracks coletadas.
+
+
+Tracks deletadas em acoustic : 0
+Tracks deletadas em afrobeat : 2
+Tracks deletadas em alternative : 4
+Tracks deletadas em anime : 7
+Tracks deletadas em metal : 1
+Tracks deletadas em bluegrass : 1
+Tracks deletadas em blues : 4
+Tracks deletadas em brazilian : 4
+Tracks deletadas em break : 7
+Tracks deletadas em british : 1
+Tracks deletadas em asian-pop : 2
+Tracks deletadas em house : 7
+Tracks deletadas em children : 2
+Tracks deletadas em chill : 0
+Tracks deletadas em classical : 4
+Tracks deletadas em club : 4
+Tracks deletadas em comedy : 0
+Tracks deletadas em country : 0
+Tracks deletadas em electronic : 4
+Tracks deletadas em disco : 7
+Tracks deletadas em disney : 0
+Tracks deletadas em drum-and-bass : 6
+Tracks deletadas em emo : 2
+Tracks deletadas em folk : 1
+Tracks deletadas em french : 3
+Tracks deletadas em funk : 2
+Tracks deletadas em garage : 5
+Tracks deletadas em german : 1
+Tracks deletadas em gospel : 8
+Tracks deletadas em goth : 1
+Tracks deletadas em grindcore : 3
+Tracks deletadas em groove : 4
+Tracks deletadas em grunge : 2
+Tracks deletadas em rock : 0
+Tracks deletadas em pop : 0
+Tracks deletadas em hip-hop : 2
+Tracks deletadas em holidays : 0
+Tracks deletadas em eletronic : 1
+Tracks deletadas em indian : 4
+Tracks deletadas em indie : 0
+Tracks deletadas em industrial : 2
+Tracks deletadas em iranian : 7
+Tracks deletadas em japanese : 0
+Tracks deletadas em jazz : 2
+Tracks deletadas em k-pop : 13
+Tracks deletadas em latin : 2
+Tracks deletadas em malay : 2
+Tracks deletadas em movies : 0
+Tracks deletadas em piano : 0
+Tracks deletadas em punk : 2
+Tracks deletadas em reggae : 4
+Tracks deletadas em reggaeton : 7
+Tracks deletadas em road-trip : 0
+Tracks deletadas em romance : 0
+Tracks deletadas em sad : 0
+Tracks deletadas em show-tunes : 10
+Tracks deletadas em ska : 3
+Tracks deletadas em sleep : 6
+Tracks deletadas em soul : 1
+Tracks deletadas em soundtracks : 0
+Tracks deletadas em spanish : 2
+Tracks deletadas em study : 0
+Tracks deletadas em summer : 0
+Tracks deletadas em swedish : 2
+Tracks deletadas em trance : 3
+Tracks deletadas em turkish : 2
+Tracks deletadas em work-out : 0
+Tracks deletadas em world-music : 24
+
+
+Foram excluídas 200 tracks devido à duplicação.
+Foram excluídas 0 tracks que não possuem métricas.
+Restaram ao todo 5057 tracks.
