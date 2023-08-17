@@ -34,4 +34,5 @@ if __name__ == "__main__":
     # data_manager.remove_no_features_musics()
     # data_manager.check_dupe_tracks()
     analysis = Analysis(database_driver, MARKET_SEARCHED, YEAR_TO_SEARCH[0], client)
-    analysis.generate_supergenres_stats_radar_map()
+    #analysis.generate_supergenres_stats_radar_map()
+    analysis.generate_supergenres_stats_box_plot()

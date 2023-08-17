@@ -58,4 +58,37 @@ class Analysis:
             print(
                 f"\n\033[94mExportando {self.market_searched} - {self.year_searched} -> {genre}.png\033[0m\n"
             )
+            fig.update_layout(title=f"Radar ({genre}) - {self.market_searched}/{self.year_searched}")
             fig.write_image(f"{save_path}/{genre}.png")
+
+    def generate_supergenres_stats_box_plot(self, plots_per_image=10):
+
+        save_path = f"features/{self.market_searched}/{self.year_searched}/boxplot"
+        if not os.path.exists(save_path):
+            os.mkdir(save_path)
+
+        supergenres = self.client.config.inv_supergenre_dictionary.keys()
+
+        df = pd.DataFrame({"genre":[], "popularity": []})
+
+        last_index = plots_per_image
+        image_index = 0
+
+        for index,genre in enumerate(supergenres):
+            query = f"MATCH(g: Genre {{ name: '{genre}' }})-[:HAS_GENRE]-(t) RETURN t"
+            result = self.driver.exec(query)
+
+            popularities = [item["t"]["popularity"] for item in result]
+
+            df_dict = {"genre":genre, "popularity": popularities}
+
+            df = pd.concat([df, pd.DataFrame(df_dict)], ignore_index=True)
+
+            if (index%last_index == 0 and index != 0) or index == len(supergenres)-1:
+                image_index += 1
+
+                fig = px.box(df, x="genre", y="popularity", points="all")
+                fig.update_layout(title=f"Boxplot - {self.market_searched}/{self.year_searched}")
+                fig.write_image(f"{save_path}/boxplot_{image_index}.png")
+
+                df = pd.DataFrame({"genre":[], "popularity": []})
